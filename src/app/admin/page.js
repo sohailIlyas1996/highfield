@@ -69,12 +69,20 @@ export default function AdminDashboard() {
             Admin Bookings Dashboard
           </div>
         </div>
-        <button
-          onClick={handleLogout}
-          className="bg-blue-900 text-yellow-400 font-semibold px-6 py-2 rounded hover:bg-blue-700 hover:text-yellow-300 transition shadow"
-        >
-          Logout
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={() => router.push("/uploadpost")}
+            className="bg-blue-900 text-yellow-400 font-semibold px-6 py-2 rounded hover:bg-blue-700 hover:text-yellow-300 transition shadow"
+          >
+            Upload Post
+          </button>
+          <button
+            onClick={handleLogout}
+            className="bg-blue-900 text-yellow-400 font-semibold px-6 py-2 rounded hover:bg-blue-700 hover:text-yellow-300 transition shadow"
+          >
+            Logout
+          </button>
+        </div>
       </header>
       {/* Bookings Table */}
       <main className="flex-1 flex flex-col items-center py-10 px-2 md:px-0 overflow-y-auto">
