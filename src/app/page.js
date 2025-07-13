@@ -127,8 +127,14 @@ export default function Home() {
       <header className="bg-blue-900 text-white shadow-md">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center py-4 px-4 gap-4 md:gap-0">
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold tracking-tight">
-              Highfield Garage
+            <Image
+              src="/HIGHLOGO.png"
+              alt="Highfield Logo"
+              width={50}
+              height={50}
+            />
+            <span className="text-2xl font-bold tracking-tight uppercase">
+              Highfield M.O.T & REPAIR
             </span>
           </div>
           <nav className="flex flex-wrap gap-2 md:gap-4 justify-center md:justify-end">
@@ -458,8 +464,8 @@ export default function Home() {
       {/* Footer */}
       <footer id="contact" className="bg-blue-900 text-white py-8 mt-auto">
         <div className="container mx-auto px-4 text-center">
-          <div className="text-sm">
-            © 2025 Highfield Garage. All rights reserved.
+          <div className="text-sm uppercase">
+            © 2025 Highfield M.O.T & REPAIR. All rights reserved.
           </div>
         </div>
       </footer>
@@ -472,7 +478,7 @@ export default function Home() {
               Booking Confirmed!
             </h2>
             <p className="mb-6">
-              Thank you for booking with Highfield Garage.
+              Thank you for booking with Highfield M.O.T & REPAIR.
               <br />
               We look forward to seeing you!
             </p>
