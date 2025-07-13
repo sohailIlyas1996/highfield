@@ -150,6 +150,9 @@ export default function Home() {
             <Link href="#contact" className="hover:underline">
               Contact
             </Link>
+            <Link href="/post" className="hover:underline">
+              Posts
+            </Link>
             <Link
               href="/login"
               className="bg-yellow-400 text-blue-900 font-semibold px-4 py-2 rounded hover:bg-yellow-300 transition"

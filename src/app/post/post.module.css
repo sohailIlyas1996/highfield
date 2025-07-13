@@ -1,0 +1,76 @@
+.bbcContainer {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.bbcHeader {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #b80000;
+  margin-bottom: 32px;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 12px;
+}
+
+.postsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.postCard {
+  display: flex;
+  background: #f6f6f6;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s;
+}
+
+.postCard:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.imageWrapper {
+  flex: 0 0 120px;
+  display: flex;
+  align-items: center;
+  background: #eaeaea;
+}
+
+.postImage {
+  object-fit: cover;
+  border-radius: 0 0 0 6px;
+}
+
+.postContent {
+  flex: 1;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.postTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #222;
+}
+
+.postMeta {
+  font-size: 0.95rem;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.postSummary {
+  font-size: 1.05rem;
+  color: #444;
+  margin: 0;
+}
