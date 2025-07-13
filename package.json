@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0",
+    "firebase": "^11.10.0",
     "framer-motion": "^12.23.3",
     "next": "15.3.5",
+    "nodemailer": "^7.0.5",
     "react": "^19.0.0",
     "react-datepicker": "^8.4.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "resend": "^4.6.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

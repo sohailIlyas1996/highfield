@@ -12,9 +12,19 @@ export default function Home() {
   const [phone, setPhone] = useState("");
   const [registration, setRegistration] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactLoading, setContactLoading] = useState(false);
+  const [contactError, setContactError] = useState("");
+  const [contactSuccess, setContactSuccess] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     // Validation
     if (
       !name.trim() ||
@@ -33,12 +43,29 @@ export default function Home() {
       alert("Phone number should be digits only (7-15 digits).");
       return;
     }
-    // Optionally, add more validation for registration if needed
-    console.log("Name:", name);
-    console.log("Phone:", phone);
-    console.log("Registration:", registration);
-    console.log("Selected date:", selectedDate);
-    setShowModal(true);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          phone,
+          registration,
+          date: selectedDate,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setShowModal(true);
+      } else {
+        setError(data.error || "Failed to book. Please try again.");
+      }
+    } catch (err) {
+      setError("Failed to book. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCloseModal = () => {
@@ -47,6 +74,51 @@ export default function Home() {
     setPhone("");
     setRegistration("");
     setSelectedDate(null);
+  };
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    setContactError("");
+    setContactSuccess(false);
+    if (!contactName.trim() || !contactEmail.trim() || !contactMessage.trim()) {
+      setContactError("Please fill in all fields.");
+      return;
+    }
+    if (!/^[a-zA-Z ]+$/.test(contactName.trim())) {
+      setContactError("Name should only contain letters and spaces.");
+      return;
+    }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contactEmail.trim())) {
+      setContactError("Please enter a valid email address.");
+      return;
+    }
+    setContactLoading(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: contactName,
+          email: contactEmail,
+          message: contactMessage,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setContactSuccess(true);
+        setContactName("");
+        setContactEmail("");
+        setContactMessage("");
+      } else {
+        setContactError(
+          data.error || "Failed to send message. Please try again."
+        );
+      }
+    } catch (err) {
+      setContactError("Failed to send message. Please try again.");
+    } finally {
+      setContactLoading(false);
+    }
   };
 
   return (
@@ -73,7 +145,7 @@ export default function Home() {
               Contact
             </Link>
             <Link
-              href="/admin"
+              href="/login"
               className="bg-yellow-400 text-blue-900 font-semibold px-4 py-2 rounded hover:bg-yellow-300 transition"
             >
               Admin Login
@@ -145,10 +217,12 @@ export default function Home() {
               <button
                 type="submit"
                 className="w-full sm:w-auto bg-yellow-400 text-blue-900 font-semibold px-6 py-2 rounded hover:bg-yellow-300 transition"
+                disabled={loading}
               >
-                Book Now
+                {loading ? "Booking..." : "Book Now"}
               </button>
             </form>
+            {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
             <motion.div
               className="flex items-center justify-center md:justify-start gap-2 mt-4 text-sm text-blue-700"
               initial={{ opacity: 0 }}
@@ -290,17 +364,100 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Contact Us Section */}
+      <section
+        id="contact-section"
+        className="py-12 bg-yellow-50 border-t border-blue-100"
+      >
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center">
+            Contact Us
+          </h2>
+          <div className="bg-white rounded-lg shadow p-6 md:p-8 flex flex-col md:flex-row gap-8">
+            {/* Map on the left */}
+            <div className="md:w-1/2 w-full h-64 md:h-auto flex-shrink-0 rounded-lg overflow-hidden border border-blue-100">
+              <iframe
+                title="Highfield Garage Location"
+                src="https://www.google.com/maps?q=unit+4J,+10+Highfield+Rd,+Alum+Rock,+Birmingham+B8+3QX&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full"
+              ></iframe>
+            </div>
+            {/* Contact form and details on the right */}
+            <div className="md:w-1/2 w-full flex flex-col gap-6">
+              <form
+                className="flex flex-col gap-4  w-full"
+                onSubmit={handleContactSubmit}
+              >
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                  className="px-4 py-2 rounded border border-blue-200 focus:outline-none focus:border-blue-500"
+                />
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  value={contactEmail}
+                  onChange={(e) => setContactEmail(e.target.value)}
+                  className="px-4 py-2 rounded border border-blue-200 focus:outline-none focus:border-blue-500"
+                />
+                <textarea
+                  placeholder="Your Message"
+                  rows={4}
+                  value={contactMessage}
+                  onChange={(e) => setContactMessage(e.target.value)}
+                  className="px-4 py-2 rounded border border-blue-200 focus:outline-none focus:border-blue-500"
+                ></textarea>
+                <button
+                  type="submit"
+                  className="bg-blue-900 text-yellow-400 font-semibold px-6 py-2 rounded hover:bg-blue-700 hover:text-yellow-300 transition"
+                  disabled={contactLoading}
+                >
+                  {contactLoading ? "Sending..." : "Send Message"}
+                </button>
+              </form>
+              {contactError && (
+                <div className="text-red-600 text-sm mt-2">{contactError}</div>
+              )}
+              {contactSuccess && (
+                <div className="text-green-600 text-sm mt-2">
+                  Thank you! Your message has been sent.
+                </div>
+              )}
+              <div className="text-center text-blue-900 mt-4">
+                <div className="mb-2">
+                  <span className="font-semibold">Email:</span>{" "}
+                  <a
+                    href="mailto:info@highfieldgarage.com"
+                    className="underline text-blue-700"
+                  >
+                    info@highfieldgarage.com
+                  </a>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold">Phone:</span>{" "}
+                  <span className="text-blue-700">(123) 456-7890</span>
+                </div>
+                <div>
+                  <span className="font-semibold">Address:</span> unit 4J, 10
+                  Highfield Rd, Alum Rock, Birmingham B8 3QX
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer id="contact" className="bg-blue-900 text-white py-8 mt-auto">
         <div className="container mx-auto px-4 text-center">
-          <div className="mb-2">
-            Contact us at:{" "}
-            <a href="mailto:info@highfieldgarage.com" className="underline">
-              info@highfieldgarage.com
-            </a>{" "}
-            | (123) 456-7890
-          </div>
-          <div className="mb-2">123 Main Street, Your City, UK</div>
           <div className="text-sm">
             © 2025 Highfield Garage. All rights reserved.
           </div>
